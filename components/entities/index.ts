@@ -1,15 +1,18 @@
 import Matter from "matter-js";
-import { createBall } from "./components/Ball";
-import { createFloor } from "./components/Floor";
+import { Ball } from "./components/Ball";
+import { Floor } from "./components/Floor";
+import { LeftWall, RightWall } from "./components/Wall";
 
-export default () => {
+export const getEntities = () => {
   let engine = Matter.Engine.create({ enableSleeping: false });
   let world = engine.world;
-  world.gravity.y = 0.2;
+  engine.gravity.y = 0.25;
 
   return {
     physics: { engine, world },
-    Ball: createBall(world),
-    Floor: createFloor(world)
+    Ball: new Ball(world),
+    Floor: new Floor(world),
+    WallLeft: new LeftWall(world),
+    WallRight: new RightWall(world)
   };
 };

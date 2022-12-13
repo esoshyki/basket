@@ -1,12 +1,14 @@
 import Matter from "matter-js";
-import { getInitialBallPosition } from "./components/Ball";
+import { getEntities } from ".";
+import { getScreenSize } from "../../helpers/getScreenSize";
 
-export const Physics = (entities: any, { touches, time, dispatch } : any) => {
+export const Physics = (entities: ReturnType<typeof getEntities>, { touches, time, dispatch } : any) => {
+
   let engine = entities.physics.engine;
   Matter.Engine.update(engine, time.delta)
 
   touches.filter(t => t.type === 'press').forEach(t => {
-    Matter.Body.setPosition(entities.Ball.body, getInitialBallPosition())
+    entities.Ball.resetProps(getScreenSize())
   });
 
   return entities

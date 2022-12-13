@@ -1,28 +1,24 @@
-import { StatusBar, StyleSheet, View } from 'react-native';
-import Game from './components/Game';
-import * as ScreenOrientation from 'expo-screen-orientation';
-import { useEffect } from 'react';
+import { StatusBar, View } from 'react-native'
+import Game from './components/Game'
 
-export default function App() {
+import { Fragment, useState } from 'react'
+import ScreenContextWrapper, { useScreen } from './contexts/screenContext'
 
-  const lockScreen = async () => {
-    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT)
-  }
-
-  useEffect(() => {
-    lockScreen()
-  }, [lockScreen])
+function Content() {
+  const { isLocked } = useScreen()
 
   return (
-    <View style={styles.container}>
+    <View style={{ flex: 1, position: 'relative', top: 0, left: 0, width: '100%', height: '100%'}}>
       <Game />
       <StatusBar hidden />
     </View>
-  );
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+export default function App() {
+  return (
+    <ScreenContextWrapper>
+      <Content />
+    </ScreenContextWrapper>
+  )
+}
