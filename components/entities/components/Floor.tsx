@@ -9,7 +9,6 @@ const FloorComponent = (props: any) => {
   const background = props.background;
 
 
-
   return (
     <View
       style={{
@@ -18,9 +17,9 @@ const FloorComponent = (props: any) => {
         borderStyle: "solid",
         position: "absolute",
         left: 0,
-        top: 0,
+        top: props.pos.y,
         backgroundColor: background,
-        width: props.width / 2,
+        width: props.width,
         height: props.height,
       }}
     />
@@ -28,16 +27,16 @@ const FloorComponent = (props: any) => {
 };
 
 function Floor(props: GameEntityProps): any {
-  const initialBall = Matter.Bodies.rectangle(
+  const initalFloor = Matter.Bodies.rectangle(
     props.pos.x,
-    props.pos.y,
+    props.pos.y + constants.BALL_SIZE,
     props.width,
     props.height,
-    { label: "Floor", isStatic: true, restitution: 1 }
+    { label: "Floor", isStatic: true }
   );
-  Matter.World.add(props.world, initialBall);
+  Matter.World.add(props.world, initalFloor);
   return {
-    body: initialBall,
+    body: initalFloor,
     ...props,
     renderer: <FloorComponent />,
   };
@@ -46,16 +45,18 @@ function Floor(props: GameEntityProps): any {
 
 export const createFloor = (world: Matter.World) => {
 
-  const { height } = getScreenSize()
+  const { height, width } = getScreenSize()
+
+
 
   return Floor({
     world,
     background: "green",
     pos: {
       x: 0,
-      y: 0
+      y: height - 30,
     },
-    width: 20,
-    height: height,
+    width: width,
+    height: 20,
   });
 };

@@ -36,7 +36,7 @@ function Ball(props: GameEntityProps): any {
     props.pos.x,
     props.pos.y,
     props.width,
-    { label: "Ball", restitution: 0.8 }
+    { label: "Ball", restitution: 0.8, density: 5, friction: 1 }
   );
   Matter.World.add(props.world, initialBall);
   return {

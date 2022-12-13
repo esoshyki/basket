@@ -5,8 +5,7 @@ import { createFloor } from "./components/Floor";
 export default () => {
   let engine = Matter.Engine.create({ enableSleeping: false });
   let world = engine.world;
-  world.gravity.x = -0.3;
-  world.gravity.y = 0;
+  world.gravity.y = 0.2;
 
   return {
     physics: { engine, world },
