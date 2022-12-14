@@ -29,8 +29,15 @@ export abstract class Entity {
     this.width = width
     this.height = height
   }
-
   abstract resetProps(screen: ScreenSize) : void
+}
+
+export abstract class SoundPlayer {
+  actions: {
+    [k: string] : string
+  }
+
+  abstract playSound(type: keyof typeof this.actions) : void
 }
 
 export type World = Matter.World

@@ -1,14 +1,9 @@
 import constants from '../constants'
-import {
-  Entity,
-  GameEntityProps,
-  InitialProps,
-  Position,
-  ScreenSize,
-} from '../interfaces'
+import { Entity, ScreenSize } from '../interfaces'
 import { getScreenSize } from '../../../helpers/getScreenSize'
 import Matter from 'matter-js'
-import { View } from 'react-native'
+import { View, ImageBackground } from 'react-native'
+import image from '../../../assets/ball.png'
 
 const BallComponent = (props: any) => {
   const widthBody = props.body.bounds.max.x - props.body.bounds.min.x
@@ -28,12 +23,22 @@ const BallComponent = (props: any) => {
         position: 'absolute',
         left: xBody,
         top: yBody,
+
         backgroundColor: background,
         width: widthBody,
         height: heightBody,
         borderRadius: widthBody / 2,
       }}
-    />
+    >
+      <ImageBackground
+        source={image}
+        resizeMode="cover"
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+        }}
+      />
+    </View>
   )
 }
 
@@ -47,8 +52,10 @@ export class Ball extends Entity {
     this.background = 'red'
     this.body = Matter.Bodies.circle(this.pos.x, this.pos.y, 10, {
       label: 'Ball',
-      restitution: 1,
-      density: 0.0005
+      restitution: 0.8,
+      density: 0.0005,
+      friction: 0.5,
+      frictionAir: 0,
     })
     this.renderer = <BallComponent />
     Matter.World.add(this.world, this.body)

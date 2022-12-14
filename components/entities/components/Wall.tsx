@@ -1,31 +1,38 @@
-import {
-  InitialProps,
-  GameEntityProps,
-  ScreenSize,
-  Entity,
-  IEntity,
-  Position,
-} from '../interfaces'
+import { ScreenSize, Entity } from '../interfaces'
 import { getScreenSize } from '../../../helpers/getScreenSize'
 import Matter from 'matter-js'
-import { View } from 'react-native'
+import { ImageBackground, View } from 'react-native'
+import bricksPng from '../../../assets/bricks.png'
 
 const WallComponent = (props: any) => {
   const background = props.background
+  const widthBody = props.body.bounds.max.x - props.body.bounds.min.x
+  const heightBody = props.body.bounds.max.y - props.body.bounds.min.y
+
+  const xBody = props.body.position.x - widthBody / 2
+  const yBody = props.body.position.y - heightBody / 2
+
   return (
     <View
       style={{
-        borderWidth: 1,
-        borderColor: '#000',
-        borderStyle: 'solid',
         position: 'absolute',
-        left: props.pos.x,
-        top: props.pos.y,
-        backgroundColor: background,
-        width: props.width,
-        height: props.height,
+        left: xBody,
+        top: yBody,
+        width: widthBody,
+        height: heightBody,
       }}
-    />
+    >
+      <ImageBackground
+        source={bricksPng}
+        resizeMode="repeat"
+        style={{
+          width: '100%',
+          height: '100%',
+          flex: 1,
+          justifyContent: 'center',
+        }}
+      />
+    </View>
   )
 }
 
@@ -33,8 +40,9 @@ class Wall extends Entity {
   constructor(world: Matter.World, x: number, left?: true) {
     super(world)
     this.pos.x = x
+    this.width = 50
+    this.height = getScreenSize().height * 2
     this.pos.y = 0
-    ;(this.width = 10), (this.height = getScreenSize().height)
     this.background = 'yellow'
     this.renderer = <WallComponent />
     this.body = Matter.Bodies.rectangle(
@@ -42,16 +50,19 @@ class Wall extends Entity {
       this.pos.y,
       this.width,
       this.height,
-      { isStatic: true, label: left ? 'WallLeft' : 'WallRight' }
+      { isStatic: true, label: left ? 'WallLeft' : 'WallRight', friction: 1 }
     )
     Matter.World.add(this.world, this.body)
   }
 
   resetProps(screen: ScreenSize): void {
-    this.width = 10
-    this.height = screen.height
-    this.body.position = this.pos;
-    Matter.Body.setPosition(this.body, this.pos);
+    this.width = 50
+    this.height = screen.height * 2
+    this.body.position = {
+      x: this.pos.x,
+      y: 0,
+    }
+    Matter.Body.setPosition(this.body, this.pos)
   }
 }
 
@@ -63,6 +74,6 @@ export class LeftWall extends Wall {
 
 export class RightWall extends Wall {
   constructor(world: Matter.World) {
-    super(world, getScreenSize().width - 10)
+    super(world, getScreenSize().width)
   }
 }

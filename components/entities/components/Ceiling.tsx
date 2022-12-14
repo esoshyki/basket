@@ -1,20 +1,29 @@
-import constants from '../constants'
-import { Entity, ScreenSize } from '../interfaces'
+import {
+  InitialProps,
+  GameEntityProps,
+  ScreenSize,
+  Entity,
+  IEntity,
+  Position,
+} from '../interfaces'
 import { getScreenSize } from '../../../helpers/getScreenSize'
 import Matter from 'matter-js'
-import { View, ImageBackground } from 'react-native'
-import floorImage from '../../../assets/floor.png'
+import { View } from 'react-native'
 
-const FloorComponent = (props: any) => {
+const CeilingComponent = (props: any) => {
   const background = props.background
   const widthBody = props.body.bounds.max.x - props.body.bounds.min.x
   const heightBody = props.body.bounds.max.y - props.body.bounds.min.y
 
   const xBody = props.body.position.x - widthBody / 2
   const yBody = props.body.position.y - heightBody / 2
+
   return (
     <View
       style={{
+        borderWidth: 1,
+        borderColor: '#000',
+        borderStyle: 'solid',
         position: 'absolute',
         left: xBody,
         top: yBody,
@@ -22,45 +31,35 @@ const FloorComponent = (props: any) => {
         width: widthBody,
         height: heightBody,
       }}
-    >
-      <ImageBackground
-        source={floorImage}
-        resizeMode="repeat"
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-        }}
-      />
-    </View>
+    />
   )
 }
 
-export class Floor extends Entity {
+export class Ceiling extends Entity {
   constructor(world: Matter.World) {
-    const { width, height } = getScreenSize()
-    const max = Math.max(width, height)
     super(world)
-    this.height = 20
-    this.width = max
     this.pos.x = getScreenSize().width / 2
-    this.pos.y = getScreenSize().height - 10
-    this.background = 'green'
-    this.renderer = <FloorComponent />
+    this.height = 10
+    this.width = getScreenSize().width
+    this.pos.y = -getScreenSize().height + 10
+
+    this.background = 'yellow'
+    this.renderer = <CeilingComponent />
     this.body = Matter.Bodies.rectangle(
       this.pos.x,
       this.pos.y,
       this.width,
       this.height,
-      { isSleeping: true, label: 'Floor', restitution: 0.8, friction: 0 }
+      { isStatic: true, label: 'Celining', friction: 1 }
     )
     Matter.World.add(this.world, this.body)
   }
 
-  resetProps = (screen: ScreenSize): void => {
-    this.pos.x = screen.height / 2
-    this.pos.y = screen.height
-    this.height = 20
+  resetProps(screen: ScreenSize): void {
+    this.pos.x = screen.width / 2
+    this.height = 10
     this.width = screen.width
+    this.pos.y = -screen.height + this.width
     Matter.Body.setPosition(this.body, this.pos)
   }
 }
