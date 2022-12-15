@@ -8,6 +8,7 @@ export const ContolsPhysics = (entities: ReturnType<typeof getEntities>, { touch
   Matter.Engine.update(engine, time.delta)
 
   touches.filter(t => t.type === 'start').forEach(t => {
+    console.log(engine.gravity.y);
     entities.Controls.setTouchStart({
       time: new Date(),
       pos: {

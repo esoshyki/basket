@@ -1,9 +1,11 @@
 import constants from '../constants'
-import { Entity, ScreenSize } from '../interfaces'
+import { ScreenSize } from '../interfaces'
 import { getScreenSize } from '../../../helpers/getScreenSize'
 import Matter from 'matter-js'
 import { View, ImageBackground } from 'react-native'
 import image from '../../../assets/ball.png'
+import { Entity } from './Enitity'
+import { Splayer } from './SoundPlayer'
 
 const BallComponent = (props: any) => {
   const widthBody = props.body.bounds.max.x - props.body.bounds.min.x
@@ -58,12 +60,16 @@ export class Ball extends Entity {
       frictionAir: 0,
     })
     this.renderer = <BallComponent />
-    Matter.World.add(this.world, this.body)
+
   }
 
   resetProps = (screen: ScreenSize): void => {
     this.pos.x = (screen.width - constants.BALL_SIZE) / 2
     this.pos.y = (screen.height - constants.BALL_SIZE) / 2
     Matter.Body.setPosition(this.body, this.pos)
+  }
+
+  stop() {
+    Matter.Body.setVelocity(this.body, { x: 0, y: 0})
   }
 }

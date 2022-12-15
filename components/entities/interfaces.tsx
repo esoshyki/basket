@@ -15,7 +15,7 @@ export abstract class Entity {
   width: number
   height: number
   background: string
-  renderer: JSX.Element
+  renderer: JSX.Element | null
   world: Matter.World
   constructor(world: Matter.World) {
     this.world = world
@@ -28,6 +28,10 @@ export abstract class Entity {
   setSize(width: number, height: number) {
     this.width = width
     this.height = height
+  }
+
+  addToWorld() {
+    Matter.World.add(this.world, this.body);
   }
   abstract resetProps(screen: ScreenSize) : void
 }

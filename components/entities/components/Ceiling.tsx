@@ -18,6 +18,7 @@ const CeilingComponent = (props: any) => {
   const xBody = props.body.position.x - widthBody / 2
   const yBody = props.body.position.y - heightBody / 2
 
+
   return (
     <View
       style={{
@@ -52,7 +53,6 @@ export class Ceiling extends Entity {
       this.height,
       { isStatic: true, label: 'Celining', friction: 1 }
     )
-    Matter.World.add(this.world, this.body)
   }
 
   resetProps(screen: ScreenSize): void {

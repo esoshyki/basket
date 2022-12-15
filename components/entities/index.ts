@@ -24,3 +24,5 @@ export const getEntities = () => {
     Sound: new Splayer()
   }
 }
+
+export type Enteties = ReturnType<typeof getEntities>;

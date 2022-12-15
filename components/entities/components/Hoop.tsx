@@ -11,6 +11,7 @@ const HoopComponent = (props: any) => {
 
   const xBody = props.body.position.x - widthBody / 2
   const yBody = props.body.position.y - heightBody / 2
+
   return (
     <View
       style={{
@@ -34,13 +35,16 @@ const HoopComponent = (props: any) => {
 }
 
 interface IHoop {
-  verges: Matter.Body[]
+  verges: {
+    leftVerge: Matter.Body
+    rightVerge: Matter.Body
+  }
   ballInBasket: boolean
   setBallInBasket: (v: boolean) => void
 }
 
 export class Hoop extends Entity implements IHoop {
-  verges: Matter.Body[]
+  verges: { leftVerge: Matter.Body; rightVerge: Matter.Body }
   ballInBasket: boolean
   constructor(world: Matter.World) {
     const { width, height } = getScreenSize()
@@ -59,24 +63,21 @@ export class Hoop extends Entity implements IHoop {
       this.height,
       { isSensor: true, isStatic: true, label: 'Hoop' }
     )
-    this.ballInBasket = false;
-    this.verges = [
-      Matter.Bodies.circle(
+    this.ballInBasket = false
+    this.verges = {
+      leftVerge: Matter.Bodies.circle(
         this.pos.x - this.width / 2 + 2,
         this.pos.y - this.height / 2 - 2,
         2,
-        { isStatic: true, friction: 1 }
+        { isStatic: true, friction: 1, label: 'LeftHoopVerge' }
       ),
-      Matter.Bodies.circle(
+      rightVerge: Matter.Bodies.circle(
         this.pos.x + this.width / 2 + 2,
         this.pos.y - this.height / 2 - 2,
         2,
-        { isStatic: true, friction: 1 }
+        { isStatic: true, friction: 1, label: 'RightHoopVerge' }
       ),
-    ]
-    Matter.World.add(world, this.verges[0])
-    Matter.World.add(world, this.verges[1])
-    Matter.World.add(this.world, this.body)
+    }
   }
 
   resetProps = (screen: ScreenSize): void => {
@@ -87,7 +88,13 @@ export class Hoop extends Entity implements IHoop {
     Matter.Body.setPosition(this.body, this.pos)
   }
 
-  setBallInBasket (v: boolean) {
-    this.ballInBasket = v;
+  setBallInBasket(v: boolean) {
+    this.ballInBasket = v
+  }
+
+  addToWorld(): void {
+    Matter.World.add(this.world, this.verges.leftVerge)
+    Matter.World.add(this.world, this.verges.rightVerge)
+    Matter.World.add(this.world, this.body)
   }
 }

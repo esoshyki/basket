@@ -4,22 +4,26 @@ import { ImageBackground, View } from 'react-native'
 import { GameEngine } from 'react-native-game-engine'
 import { useScreen } from '../contexts/screenContext'
 import { getEntities } from './entities'
-import { BallPhysics } from './entities/physics/ball'
 import { ContolsPhysics } from './entities/physics/controlles'
-import GameCTXWrapper, { useGame } from './GameCTX'
 import bg from '../assets/background.png'
+import { useGame } from '../contexts/gameContext'
+import { addCollisionListener } from './collisions'
 
 const Game = memo(function () {
-  const [entities] = useState(getEntities())
-  const { running, startGame } = useGame()
+  const { entities, showMenu } = useGame()
+
+  const [running, setRunning] = useState(false)
   const screen = useScreen()
 
   useEffect(() => {
-    entities.WallLeft.resetProps(screen)
-    entities.WallRight.resetProps(screen)
-    entities.Floor.resetProps(screen)
-    entities.Ball.resetProps(screen)
-  }, [screen])
+    setRunning(!showMenu)
+  }, [showMenu, setRunning])
+
+  useEffect(() => {
+    if (entities) {
+      addCollisionListener(entities)
+    }
+  }, [entities, addCollisionListener])
 
   return (
     <View
@@ -30,8 +34,10 @@ const Game = memo(function () {
         position: 'absolute',
         top: 0,
         left: 0,
+        bottom: 0,
+        right: 0,
       }}
-      onTouchStart={startGame}
+      onTouchStart={() => setRunning(true)}
     >
       <ImageBackground
         style={{
@@ -40,15 +46,15 @@ const Game = memo(function () {
           width: '100%',
           height: '100%',
 
-          zIndex: -1,
+          zIndex: 1,
         }}
         source={bg}
         resizeMode={'cover'}
       />
       <GameEngine
-        entities={getEntities()}
+        entities={entities}
         running={running}
-        systems={[BallPhysics, ContolsPhysics]}
+        systems={[ContolsPhysics]}
         style={{
           position: 'absolute',
           top: 0,
@@ -62,10 +68,4 @@ const Game = memo(function () {
   )
 })
 
-export default function () {
-  return (
-    <GameCTXWrapper>
-      <Game />
-    </GameCTXWrapper>
-  )
-}
+export default Game

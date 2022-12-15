@@ -17,10 +17,10 @@ export class Splayer extends SoundPlayer {
     this.actions = sounds
   }
 
-  async playSound(type: keyof typeof sounds): Promise<void> {
+  async playSound(type: keyof typeof sounds, volume?: number): Promise<void> {
     const tune = this.actions[type];
     if (tune) {
-      const { sound } = await Audio.Sound.createAsync(ballKickSound);
+      const { sound } = await Audio.Sound.createAsync(tune as any, { volume: volume ?? 1 });
 
       await sound.playAsync()
 

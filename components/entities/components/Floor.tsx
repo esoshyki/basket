@@ -12,6 +12,7 @@ const FloorComponent = (props: any) => {
 
   const xBody = props.body.position.x - widthBody / 2
   const yBody = props.body.position.y - heightBody / 2
+
   return (
     <View
       style={{
@@ -53,7 +54,6 @@ export class Floor extends Entity {
       this.height,
       { isSleeping: true, label: 'Floor', restitution: 0.8, friction: 0 }
     )
-    Matter.World.add(this.world, this.body)
   }
 
   resetProps = (screen: ScreenSize): void => {
@@ -62,5 +62,9 @@ export class Floor extends Entity {
     this.height = 20
     this.width = screen.width
     Matter.Body.setPosition(this.body, this.pos)
+  }
+
+  addToWorld(): void {
+    Matter.World.add(this.world, this.body)
   }
 }
