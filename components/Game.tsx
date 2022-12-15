@@ -1,6 +1,6 @@
 import Matter from 'matter-js'
 import { memo, useEffect, useState } from 'react'
-import { ImageBackground, View } from 'react-native'
+import { Button, ImageBackground, View } from 'react-native'
 import { GameEngine } from 'react-native-game-engine'
 import { useScreen } from '../contexts/screenContext'
 import { getEntities } from './entities'
@@ -8,9 +8,10 @@ import { ContolsPhysics } from './entities/physics/controlles'
 import bg from '../assets/background.png'
 import { useGame } from '../contexts/gameContext'
 import { addCollisionListener } from './collisions'
+import ResetIcon from './svg'
 
 const Game = memo(function () {
-  const { entities, showMenu } = useGame()
+  const { entities, showMenu, setShowMenu } = useGame()
 
   const [running, setRunning] = useState(false)
   const screen = useScreen()
@@ -39,6 +40,12 @@ const Game = memo(function () {
       }}
       onTouchStart={() => setRunning(true)}
     >
+      <View
+        style={{ position: 'absolute', right: 20, top: 20, zIndex: 5 }}
+        onTouchEnd={() => setShowMenu(true)}
+      >
+        <ResetIcon />
+      </View>
       <ImageBackground
         style={{
           flex: 1,

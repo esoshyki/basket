@@ -41,11 +41,18 @@ interface IHoop {
   }
   ballInBasket: boolean
   setBallInBasket: (v: boolean) => void
+  ballColides: (ball: Matter.Body) => boolean
+  ballEntersFromBottom: boolean
+  ballInNet: boolean
+  setBallInNet: (v: boolean) => void
 }
 
 export class Hoop extends Entity implements IHoop {
   verges: { leftVerge: Matter.Body; rightVerge: Matter.Body }
   ballInBasket: boolean
+  ballColides: (ball: Matter.Body) => boolean
+  ballEntersFromBottom: boolean
+  ballInNet: boolean
   constructor(world: Matter.World) {
     const { width, height } = getScreenSize()
     const max = Math.max(width, height)
@@ -64,6 +71,8 @@ export class Hoop extends Entity implements IHoop {
       { isSensor: true, isStatic: true, label: 'Hoop' }
     )
     this.ballInBasket = false
+    this.ballEntersFromBottom = false
+    this.ballInNet = false
     this.verges = {
       leftVerge: Matter.Bodies.circle(
         this.pos.x - this.width / 2 + 2,
@@ -80,6 +89,10 @@ export class Hoop extends Entity implements IHoop {
     }
   }
 
+  setBallEntersFromBottom = (v: boolean) => {
+    this.ballEntersFromBottom = v
+  }
+
   resetProps = (screen: ScreenSize): void => {
     this.height = 40
     this.width = 40
@@ -90,6 +103,27 @@ export class Hoop extends Entity implements IHoop {
 
   setBallInBasket(v: boolean) {
     this.ballInBasket = v
+  }
+
+  setBallInNet = (v: boolean) => {
+    this.ballInNet = v
+  }
+
+  ballCollides(ball: Matter.Body) {
+    if (
+      ball.bounds.max.y + this.height / 2 > this.body.position.y &&
+      !this.ballInNet &&
+      !this.ballEntersFromBottom
+    ) {
+      this.setBallInNet(true)
+      if (ball.velocity.y > 5) {
+        Matter.Body.setVelocity(ball, { x: 0, y: 5 })
+      } else {
+        Matter.Body.setVelocity(ball, { x: 0, y: ball.velocity.y})
+      }
+      return true
+    }
+    return false
   }
 
   addToWorld(): void {

@@ -12,7 +12,6 @@ const Content = memo(() => {
 
   const { width, height } = getScreenSize()
 
-  console.log('showMenu', showMenu)
 
   return (
     <View

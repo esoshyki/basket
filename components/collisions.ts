@@ -13,6 +13,20 @@ export const addCollisionListener = (entities: Enteties) => {
 
   const splayer = new Splayer()
 
+  const checkBodiesCollide = (
+    pairs: Matter.Pair[],
+    bodyA: Matter.Body,
+    bodyB: Matter.Body,
+    bodyC?: Matter.Body
+  ) =>
+    pairs.some(
+      (pair) =>
+        pair.bodyA === bodyA &&
+        (bodyC
+          ? pair.bodyB === bodyB || pair.bodyB === bodyC
+          : pair.bodyB === bodyB)
+    )
+
   Matter.Events.on(entities.physics.engine, 'collisionStart', (event) => {
     const { pairs } = event
 
@@ -40,9 +54,6 @@ export const addCollisionListener = (entities: Enteties) => {
         actions.ballKickFloor()
       }
 
-      if (ballsRolling) {
-        console.log("ball's rolling")
-      }
     }
 
     const checkBallAndWalls = () => {
@@ -73,8 +84,39 @@ export const addCollisionListener = (entities: Enteties) => {
       }
     }
 
+    const checkBallAndHoop = () => {
+      const isCollides = pairs.some(
+        (pair) => pair.bodyA === ball && pair.bodyB === hoop
+      )
+      if (isCollides) {
+        if (ball.bounds.max.y > hoop.bounds.max.y) {
+          entities.Hoop.setBallEntersFromBottom(true)
+        }
+      }
+    }
+
     checkBallAndFloor()
     checkBallAndWalls()
     checkBallAndHoopVergers()
+    checkBallAndHoop()
+  })
+
+  Matter.Events.on(entities.physics.engine, 'collisionActive', (event) => {
+    if (
+      event.pairs.some((pair) => pair.bodyA === ball && pair.bodyB === hoop)
+    ) {
+      const isScored = entities.Hoop.ballCollides(ball)
+      if (isScored) {
+        splayer.playSound('score')
+        entities.Statistic.addHit()
+      }
+    }
+  })
+
+  Matter.Events.on(entities.physics.engine, 'collisionEnd', (event) => {
+    if (checkBodiesCollide(event.pairs, ball, hoop)) {
+      entities.Hoop.setBallEntersFromBottom(false)
+      entities.Hoop.setBallInNet(false)
+    }
   })
 }

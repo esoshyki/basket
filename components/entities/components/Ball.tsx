@@ -56,7 +56,7 @@ export class Ball extends Entity {
       label: 'Ball',
       restitution: 0.8,
       density: 0.0005,
-      friction: 0.5,
+      friction: 0.8,
       frictionAir: 0,
     })
     this.renderer = <BallComponent />

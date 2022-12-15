@@ -5,12 +5,13 @@ import { Controls } from './components/Controls'
 import { Floor } from './components/Floor'
 import { Hoop } from './components/Hoop'
 import { Splayer } from './components/SoundPlayer'
+import { Statistics } from './components/Statistic'
 import { LeftWall, RightWall } from './components/Wall'
 
 export const getEntities = () => {
   let engine = Matter.Engine.create({ enableSleeping: false })
   let world = engine.world
-  engine.gravity.y = 0.25
+  engine.gravity.y = 0.5
 
   return {
     physics: { engine, world },
@@ -21,7 +22,8 @@ export const getEntities = () => {
     Ceiling: new Ceiling(world),
     Controls: new Controls(),
     Hoop: new Hoop(world),
-    Sound: new Splayer()
+    Sound: new Splayer(),
+    Statistic: new Statistics()
   }
 }
 
