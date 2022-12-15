@@ -1,17 +1,21 @@
 import { SafeAreaView, StatusBar, View } from 'react-native'
 import Game from './components/Game'
 import * as SplashScreen from 'expo-splash-screen'
-import { Fragment, memo, useState } from 'react'
+import { Fragment, memo, useEffect, useState } from 'react'
 import ScreenContextWrapper, { useScreen } from './contexts/screenContext'
 import GameContextWrapper, { useGame } from './contexts/gameContext'
 import Menu from './components/Menu'
 import { getScreenSize } from './helpers/getScreenSize'
+import * as ScreenOrientation from 'expo-screen-orientation'
 
 const Content = memo(() => {
   const { showMenu } = useGame()
 
-  const { width, height } = getScreenSize()
+  const { width, height, lockScreen } = useScreen()
 
+  useEffect(() => {
+    setTimeout(lockScreen, 2000);
+  }, [lockScreen])
 
   return (
     <View
@@ -32,12 +36,19 @@ const Content = memo(() => {
 
 export default function App() {
   SplashScreen.preventAutoHideAsync()
-  setTimeout(SplashScreen.hideAsync, 2000)
+
+  setTimeout(() => {
+    SplashScreen.hideAsync()
+  }, 2000)
+
+
   return (
-    <ScreenContextWrapper>
-      <GameContextWrapper>
-        <Content />
-      </GameContextWrapper>
-    </ScreenContextWrapper>
+    <View style={{ width: getScreenSize().height, height: getScreenSize().width }}>
+      <ScreenContextWrapper>
+        <GameContextWrapper>
+          <Content />
+        </GameContextWrapper>
+      </ScreenContextWrapper>
+    </View>
   )
 }

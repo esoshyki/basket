@@ -12,6 +12,7 @@ interface IScreen {
   width: number
   height: number
   isLocked: boolean
+  lockScreen: () => void;
 }
 
 const ScreenContext = createContext({ width: 0, height: 0 } as IScreen)
@@ -39,12 +40,8 @@ export default function screenSizeWrapper(props: PropsWithChildren<any>) {
     calcScreenSize();
   }
 
-  useEffect(() => {
-    lockScreen()
-  }, [lockScreen])
-
   return (
-    <ScreenContext.Provider value={{ width, height, isLocked }}>
+    <ScreenContext.Provider value={{ width, height, isLocked, lockScreen }}>
       {props.children}
     </ScreenContext.Provider>
   )
