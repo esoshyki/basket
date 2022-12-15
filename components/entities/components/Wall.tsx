@@ -2,10 +2,10 @@ import { ScreenSize, Entity } from '../interfaces'
 import { getScreenSize } from '../../../helpers/getScreenSize'
 import Matter from 'matter-js'
 import { ImageBackground, View } from 'react-native'
-import bricksPng from '../../../assets/bricks.png'
+import { useAssets } from '../../../contexts/assetsContext'
 
 const WallComponent = (props: any) => {
-  const background = props.background
+  const { images } = useAssets()
   const widthBody = props.body.bounds.max.x - props.body.bounds.min.x
   const heightBody = props.body.bounds.max.y - props.body.bounds.min.y
 
@@ -23,7 +23,7 @@ const WallComponent = (props: any) => {
       }}
     >
       <ImageBackground
-        source={bricksPng}
+        source={images.bricks}
         resizeMode="repeat"
         style={{
           width: '100%',

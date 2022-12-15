@@ -3,11 +3,11 @@ import { ScreenSize } from '../interfaces'
 import { getScreenSize } from '../../../helpers/getScreenSize'
 import Matter from 'matter-js'
 import { View, ImageBackground } from 'react-native'
-import image from '../../../assets/ball.png'
 import { Entity } from './Enitity'
-import { Splayer } from './SoundPlayer'
+import { useAssets } from '../../../contexts/assetsContext'
 
 const BallComponent = (props: any) => {
+  const { images } = useAssets()
   const widthBody = props.body.bounds.max.x - props.body.bounds.min.x
   const heightBody = props.body.bounds.max.y - props.body.bounds.min.y
 
@@ -33,7 +33,7 @@ const BallComponent = (props: any) => {
       }}
     >
       <ImageBackground
-        source={image}
+        source={images.ball}
         resizeMode="cover"
         style={{
           flex: 1,

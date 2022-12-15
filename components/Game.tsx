@@ -5,13 +5,15 @@ import { GameEngine } from 'react-native-game-engine'
 import { useScreen } from '../contexts/screenContext'
 import { getEntities } from './entities'
 import { ContolsPhysics } from './entities/physics/controlles'
-import bg from '../assets/background.png'
 import { useGame } from '../contexts/gameContext'
 import { addCollisionListener } from './collisions'
 import ResetIcon from './svg'
+import { useAssets } from '../contexts/assetsContext'
+
 
 const Game = memo(function () {
   const { entities, showMenu, setShowMenu } = useGame()
+  const { images } = useAssets()
 
   const [running, setRunning] = useState(false)
   const screen = useScreen()
@@ -46,7 +48,7 @@ const Game = memo(function () {
       >
         <ResetIcon />
       </View>
-      <ImageBackground
+      {images.background && <ImageBackground
         style={{
           flex: 1,
           justifyContent: 'center',
@@ -55,9 +57,9 @@ const Game = memo(function () {
 
           zIndex: 1,
         }}
-        source={bg}
+        source={images.background}
         resizeMode={'cover'}
-      />
+      />}
       <GameEngine
         entities={entities}
         running={running}

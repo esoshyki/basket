@@ -7,6 +7,7 @@ import GameContextWrapper, { useGame } from './contexts/gameContext'
 import Menu from './components/Menu'
 import { getScreenSize } from './helpers/getScreenSize'
 import * as ScreenOrientation from 'expo-screen-orientation'
+import { AssetsContextWrapper } from './contexts/assetsContext'
 
 const Content = memo(() => {
   const { showMenu } = useGame()
@@ -14,7 +15,7 @@ const Content = memo(() => {
   const { width, height, lockScreen } = useScreen()
 
   useEffect(() => {
-    setTimeout(lockScreen, 2000);
+    setTimeout(lockScreen, 2000)
   }, [lockScreen])
 
   return (
@@ -41,14 +42,17 @@ export default function App() {
     SplashScreen.hideAsync()
   }, 2000)
 
-
   return (
-    <View style={{ width: getScreenSize().height, height: getScreenSize().width }}>
-      <ScreenContextWrapper>
-        <GameContextWrapper>
-          <Content />
-        </GameContextWrapper>
-      </ScreenContextWrapper>
+    <View
+      style={{ width: getScreenSize().height, height: getScreenSize().width }}
+    >
+      <AssetsContextWrapper>
+        <ScreenContextWrapper>
+          <GameContextWrapper>
+            <Content />
+          </GameContextWrapper>
+        </ScreenContextWrapper>
+      </AssetsContextWrapper>
     </View>
   )
 }

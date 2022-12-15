@@ -1,9 +1,18 @@
 {
   "expo": {
-   "splash": {
-     "image": "./assets/splash.png",
-    
-     "resizeMode": "cover"
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4ac5ffa1-e32f-43d8-ba9f-6a3597dce497"
+      }
+    },
+    "owner": "shyki",
+    "slug": "basketshyki",
+    "android": {
+      "package": "com.shyki.basketshyki"
     }
   }
 }
