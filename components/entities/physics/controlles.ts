@@ -28,9 +28,9 @@ export const ContolsPhysics = (
     .forEach((t) => {
       const deltaX = t.delta.pageX
       const deltaY = t.delta.pageY
-      entities.Ball.setPosition({
-        x: entities.Ball.body.position.x + deltaX,
-        y: entities.Ball.body.position.y + deltaY,
+      Matter.Body.applyForce(entities.Ball.body, entities.Ball.body.position, {
+        x: deltaX * 0.00003,
+        y: deltaY * 0.00003,
       })
     })
 
