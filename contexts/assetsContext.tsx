@@ -30,7 +30,7 @@ export const useAssets = () => useContext(AssestContext)
 
 export const AssetsContextWrapper = (props: PropsWithChildren) => {
   const [_assets, error] = useExpoAssets([
-    require('../assets/background.png'),
+    require('../assets/background.jpg'),
     require('../assets/ball.png'),
     require('../assets/bricks.png'),
     require('../assets/floor.png'),
