@@ -11,6 +11,10 @@ export const ContolsPhysics = (
 
   entities.Statistic.calculateStatistic()
 
+  if (entities.Ball.pos.x < 0 - 20 || entities.Ball.pos.x > getScreenSize().width + 20 || entities.Ball.pos.y < -20 || entities.Ball.pos.y > getScreenSize().height * 2 + 20) {
+    entities.Ball.resetProps()
+  }
+
   touches
     .filter((t) => t.type === 'start')
     .forEach((t) => {

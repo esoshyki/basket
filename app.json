@@ -1,5 +1,8 @@
 {
   "expo": {
+    "name": "basketshyki",
+    "orientation": "landscape",
+    "icon": "./assets/basket.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover"
@@ -12,6 +15,8 @@
     "owner": "shyki",
     "slug": "basketshyki",
     "android": {
+      "backgroundColor": "#fff",
+      "foregroundImage": "./assets/basket.png",
       "package": "com.shyki.basketshyki"
     }
   }
