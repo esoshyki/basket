@@ -25,6 +25,7 @@ export const ContolsPhysics = (
   touches
     .filter((t) => t.type === 'start')
     .forEach((t) => {
+      entities.Ball.setDistance(0)
       entities.Controls.setTouchStart({
         time: new Date(),
         pos: {
@@ -43,6 +44,7 @@ export const ContolsPhysics = (
         x: deltaX * 0.00003,
         y: deltaY * 0.00003,
       })
+      entities.Ball.setDistance(0)
     })
 
   touches
@@ -58,7 +60,11 @@ export const ContolsPhysics = (
       entities.Controls.useForce(entities.Ball.body)
     })
 
+  entities.Ball.calculateThrowingPath(time.delta)
+
   entities.Scene.camera.followTheBall()
+
+  
 
   return entities
 }

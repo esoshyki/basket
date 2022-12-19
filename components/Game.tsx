@@ -12,6 +12,7 @@ import { useAssets } from '../contexts/assetsContext'
 import { SCENE_HEIGHT, SCENE_WIDTH } from './entities/constants'
 import SceneBackground from '../assets/background.jpg'
 import { Statistics } from './entities/components/Statistic'
+import { Ball } from './entities/components/Ball'
 
 const Game = memo(function () {
   const { entities, showMenu, setShowMenu, cameraPos } = useGame()
@@ -21,6 +22,7 @@ const Game = memo(function () {
 
   const statisitcs: Statistics | undefined =
     gameEngine?.state?.entities?.Statistic
+  const ball: Ball | undefined = gameEngine?.state?.entities?.Ball;
 
   const [running, setRunning] = useState(false)
   const screen = useScreen()
@@ -64,6 +66,7 @@ const Game = memo(function () {
             justifyContent: 'space-around',
           }}
         >
+          {ball && <Text style={{ color: "yellow", fontWeight: 'bold' }}>{`Distance: ${ball.distance.toFixed(2)} m.`}</Text>}
           <Text style={{ color: "yellow", fontWeight: 'bold' }}>{`Score: ${statisitcs.scores.score}`}</Text>
           <Text style={{ color: "yellow", fontWeight: 'bold' }}>{statisitcs.timeString}</Text>
           <Text style={{ color: "yellow", fontWeight: 'bold' }}>{`Hits: ${statisitcs.scores.hits}`}</Text>

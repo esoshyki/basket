@@ -50,10 +50,10 @@ export class Statistics {
     }
   }
 
-  addHit = () => {
+  addHit = (distance: number) => {
     this.scores.hits += 1
     this.calculateHitsPerMinute()
-    this.scores.score += 50
+    this.scores.score += Math.round(50 * distance / 10)
   }
 
   calculateHitsPerMinute = () => {

@@ -53,7 +53,6 @@ export const addCollisionListener = (entities: Enteties) => {
       if (ballKickTheFloor) {
         actions.ballKickFloor()
       }
-
     }
 
     const checkBallAndWalls = () => {
@@ -108,7 +107,7 @@ export const addCollisionListener = (entities: Enteties) => {
       const isScored = entities.Hoop.ballCollides(ball)
       if (isScored) {
         splayer.playSound('score')
-        entities.Statistic.addHit()
+        entities.Statistic.addHit(entities.Ball.distance)
       }
     }
   })
