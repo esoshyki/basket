@@ -1,5 +1,5 @@
 import Matter from 'matter-js'
-import { memo, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { Text, ImageBackground, View } from 'react-native'
 import { GameEngine } from 'react-native-game-engine'
 import { useScreen } from '../contexts/screenContext'
@@ -13,10 +13,13 @@ import { SCENE_HEIGHT, SCENE_WIDTH } from './entities/constants'
 import SceneBackground from '../assets/background.jpg'
 import { Statistics } from './entities/components/Statistic'
 import { Ball } from './entities/components/Ball'
+import Goal from './UI/Goal'
 
 const Game = memo(function () {
   const { entities, showMenu, setShowMenu, cameraPos } = useGame()
   const { images } = useAssets()
+
+  const [showGoal, setShowGoal] = useState(false);
 
   const [gameEngine, setGameEngine] = useState<any>(null)
 
@@ -26,6 +29,16 @@ const Game = memo(function () {
 
   const [running, setRunning] = useState(false)
   const screen = useScreen()
+
+  const hideShowGoalMessage = useCallback(() => {
+    setShowGoal(false)
+  }, [setShowGoal])
+
+  useEffect(() => {
+    if (statisitcs?.scores?.hits > 0) {
+      setShowGoal(true)
+    };
+  }, [statisitcs?.scores?.hits])
 
   useEffect(() => {
     setRunning(!showMenu)
@@ -51,6 +64,7 @@ const Game = memo(function () {
       }}
       onTouchStart={() => setRunning(true)}
     >
+      {showGoal && <Goal hide={hideShowGoalMessage}/>}
       {statisitcs && (
         <View
           style={{
@@ -107,6 +121,10 @@ const Game = memo(function () {
             right: 0,
             bottom: 0,
             zIndex: 2,
+          }}
+          onEvent={(event) => {
+            if (event.type == 'scores') {
+            }
           }}
         ></GameEngine>
       </View>

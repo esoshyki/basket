@@ -10,8 +10,9 @@ import {
   SCENE_HEIGHT,
   WALLS_WIDTH,
 } from '../constants'
+import { Fragment } from 'react'
 
-const HoopComponent = (props: any) => {
+const HoopComponent = (props: Hoop) => {
   const { images } = useAssets()
 
   const widthBody = props.body.bounds.max.x - props.body.bounds.min.x
@@ -20,25 +21,41 @@ const HoopComponent = (props: any) => {
   const xBody = props.body.position.x - widthBody / 2
   const yBody = props.body.position.y - heightBody / 2
 
+  const widthBeam = props.beam.bounds.max.x - props.beam.bounds.min.x;
+  const heighBeam = props.beam.bounds.max.y - props.beam.bounds.min.y;
+
   return (
-    <View
-      style={{
-        position: 'absolute',
-        left: xBody,
-        top: yBody,
-        width: widthBody,
-        height: heightBody,
-      }}
-    >
-      <ImageBackground
-        source={images.hoop}
-        resizeMode="cover"
+    <Fragment>
+      <View
         style={{
-          flex: 1,
-          justifyContent: 'center',
+          position: 'absolute',
+          left: xBody,
+          top: yBody,
+          width: widthBody,
+          height: heightBody,
+        }}
+      >
+        <ImageBackground
+          source={images.hoop}
+          resizeMode="cover"
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+          }}
+        />
+      </View>
+
+      <View
+        style={{
+          position: 'absolute',
+          top: props.beam.position.y - heighBeam / 2,
+          left: props.beam.position.x - widthBeam / 2,
+          width: widthBeam,
+          height: heighBeam,
+          backgroundColor: '#FFA500',
         }}
       />
-    </View>
+    </Fragment>
   )
 }
 
@@ -57,6 +74,7 @@ interface IHoop {
 
 export class Hoop extends Entity implements IHoop {
   verges: { leftVerge: Matter.Body; rightVerge: Matter.Body }
+  beam: Matter.Body
   ballInBasket: boolean
   ballColides: (ball: Matter.Body) => boolean
   ballEntersFromBottom: boolean
@@ -65,7 +83,7 @@ export class Hoop extends Entity implements IHoop {
     super(world)
     this.resetProps()
     this.background = 'green'
-    this.renderer = <HoopComponent />
+    this.renderer = <HoopComponent {...this} />
 
     this.ballInBasket = false
     this.ballEntersFromBottom = false
@@ -84,6 +102,13 @@ export class Hoop extends Entity implements IHoop {
         { isStatic: true, friction: 1, label: 'RightHoopVerge' }
       ),
     }
+    this.beam = Matter.Bodies.rectangle(
+      this.pos.x - this.width / 2 - 5,
+      this.pos.y - this.height / 2 + 2.5,
+      10,
+      5,
+      { isStatic: true, friction: 1, label: 'Beam' }
+    )
   }
 
   setBallEntersFromBottom = (v: boolean) => {
@@ -93,7 +118,7 @@ export class Hoop extends Entity implements IHoop {
   resetProps = (): void => {
     this.height = HOOP_HEIGHT
     this.width = HOOP_WIDTH
-    this.pos.x = WALLS_WIDTH + HOOP_WIDTH + BALL_SIZE / 2
+    this.pos.x = WALLS_WIDTH + (HOOP_WIDTH + BALL_SIZE) / 2
     this.pos.y = SCENE_HEIGHT - HOOP_HEIGHT_FROM_FLOOR
     if (!this.body) {
       this.body = Matter.Bodies.rectangle(
@@ -136,5 +161,6 @@ export class Hoop extends Entity implements IHoop {
     Matter.World.add(this.world, this.verges.leftVerge)
     Matter.World.add(this.world, this.verges.rightVerge)
     Matter.World.add(this.world, this.body)
+    Matter.World.add(this.world, this.beam)
   }
 }

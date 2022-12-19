@@ -106,6 +106,7 @@ export const addCollisionListener = (entities: Enteties) => {
     ) {
       const isScored = entities.Hoop.ballCollides(ball)
       if (isScored) {
+        Matter.Events.trigger(entities.physics.engine, 'scores');
         splayer.playSound('score')
         entities.Statistic.addHit(entities.Ball.distance)
       }
