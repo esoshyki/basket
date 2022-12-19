@@ -3,6 +3,7 @@ import { getScreenSize } from '../../../helpers/getScreenSize'
 import Matter from 'matter-js'
 import { ImageBackground, View } from 'react-native'
 import { useAssets } from '../../../contexts/assetsContext'
+import { SCENE_HEIGHT, SCENE_WIDTH, WALLS_WIDTH } from '../constants'
 
 const WallComponent = (props: any) => {
   const { images } = useAssets()
@@ -11,6 +12,7 @@ const WallComponent = (props: any) => {
 
   const xBody = props.body.position.x - widthBody / 2
   const yBody = props.body.position.y - heightBody / 2
+
 
   return (
     <View
@@ -36,32 +38,37 @@ const WallComponent = (props: any) => {
   )
 }
 
+
 class Wall extends Entity {
+  left?: true
   constructor(world: Matter.World, x: number, left?: true) {
     super(world)
-    this.pos.x = x
-    this.width = 50
-    this.height = getScreenSize().height * 2
-    this.pos.y = 0
-    this.background = 'yellow'
+    this.left = left;
+    this.resetProps()
     this.renderer = <WallComponent />
-    this.body = Matter.Bodies.rectangle(
-      this.pos.x,
-      this.pos.y,
-      this.width,
-      this.height,
-      { isStatic: true, label: left ? 'WallLeft' : 'WallRight', friction: 1 }
-    )
     Matter.World.add(this.world, this.body)
   }
 
-  resetProps(screen: ScreenSize): void {
-    this.width = 50
-    this.height = screen.height * 2
-    this.body.position = {
-      x: this.pos.x,
-      y: 0,
+  resetProps(): void {
+    this.width = WALLS_WIDTH
+    this.height = SCENE_HEIGHT - 2 * WALLS_WIDTH
+    this.pos.x = this.left ? WALLS_WIDTH / 2 : SCENE_WIDTH - WALLS_WIDTH / 2;
+    this.pos.y = SCENE_HEIGHT / 2;
+    if (!this.body) {
+      this.body = Matter.Bodies.rectangle(
+        this.pos.x,
+        this.pos.y,
+        this.width,
+        this.height,
+        { isStatic: true, label: this.left ? 'WallLeft' : 'WallRight', friction: 1 }
+      )
+    } else {
+      this.body.position = {
+        x: this.pos.x,
+        y: this.pos.y
+      }
     }
+
     Matter.Body.setPosition(this.body, this.pos)
   }
 }

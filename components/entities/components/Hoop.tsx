@@ -1,9 +1,15 @@
-
-import { Entity, ScreenSize } from '../interfaces'
-import { getScreenSize } from '../../../helpers/getScreenSize'
+import { Entity } from '../interfaces'
 import Matter from 'matter-js'
 import { View, ImageBackground } from 'react-native'
 import { useAssets } from '../../../contexts/assetsContext'
+import {
+  BALL_SIZE,
+  HOOP_HEIGHT,
+  HOOP_HEIGHT_FROM_FLOOR,
+  HOOP_WIDTH,
+  SCENE_HEIGHT,
+  WALLS_WIDTH,
+} from '../constants'
 
 const HoopComponent = (props: any) => {
   const { images } = useAssets()
@@ -56,22 +62,11 @@ export class Hoop extends Entity implements IHoop {
   ballEntersFromBottom: boolean
   ballInNet: boolean
   constructor(world: Matter.World) {
-    const { width, height } = getScreenSize()
-    const max = Math.max(width, height)
     super(world)
-    this.height = 40
-    this.width = 40
-    this.pos.x = 50
-    this.pos.y = getScreenSize().height - 250
+    this.resetProps()
     this.background = 'green'
     this.renderer = <HoopComponent />
-    this.body = Matter.Bodies.rectangle(
-      this.pos.x,
-      this.pos.y,
-      this.width,
-      this.height,
-      { isSensor: true, isStatic: true, label: 'Hoop' }
-    )
+
     this.ballInBasket = false
     this.ballEntersFromBottom = false
     this.ballInNet = false
@@ -95,11 +90,20 @@ export class Hoop extends Entity implements IHoop {
     this.ballEntersFromBottom = v
   }
 
-  resetProps = (screen: ScreenSize): void => {
-    this.height = 40
-    this.width = 40
-    this.pos.x = 50
-    this.pos.y = screen.height - 150
+  resetProps = (): void => {
+    this.height = HOOP_HEIGHT
+    this.width = HOOP_WIDTH
+    this.pos.x = WALLS_WIDTH + HOOP_WIDTH + BALL_SIZE / 2
+    this.pos.y = SCENE_HEIGHT - HOOP_HEIGHT_FROM_FLOOR
+    if (!this.body) {
+      this.body = Matter.Bodies.rectangle(
+        this.pos.x,
+        this.pos.y,
+        this.width,
+        this.height,
+        { isSensor: true, isStatic: true, label: 'Hoop' }
+      )
+    }
     Matter.Body.setPosition(this.body, this.pos)
   }
 
@@ -121,7 +125,7 @@ export class Hoop extends Entity implements IHoop {
       if (ball.velocity.y > 5) {
         Matter.Body.setVelocity(ball, { x: 0, y: 5 })
       } else {
-        Matter.Body.setVelocity(ball, { x: 0, y: ball.velocity.y})
+        Matter.Body.setVelocity(ball, { x: 0, y: ball.velocity.y })
       }
       return true
     }

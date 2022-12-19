@@ -16,6 +16,7 @@ const StatisticsComponent = (props: Statistics) => {
         height: 30,
         flexDirection: 'row',
         alignItems: 'center',
+        zIndex: 7,
         justifyContent: 'space-around',
       }}
     >

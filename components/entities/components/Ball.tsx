@@ -1,4 +1,4 @@
-import constants from '../constants'
+import { BALL_SIZE, SCENE_HEIGHT, SCENE_WIDTH } from '../constants'
 import { ScreenSize } from '../interfaces'
 import { getScreenSize } from '../../../helpers/getScreenSize'
 import Matter from 'matter-js'
@@ -19,13 +19,12 @@ const BallComponent = (props: any) => {
   return (
     <View
       style={{
-        borderWidth: 1,
-        borderColor: '#000',
+        borderWidth: 2,
+        borderColor: '#fff',
         borderStyle: 'solid',
         position: 'absolute',
         left: xBody,
         top: yBody,
-
         backgroundColor: background,
         width: widthBody,
         height: heightBody,
@@ -47,25 +46,26 @@ const BallComponent = (props: any) => {
 export class Ball extends Entity {
   constructor(world: Matter.World) {
     super(world)
-    this.pos.x = (getScreenSize().width - constants.BALL_SIZE) / 2
-    this.pos.y = (getScreenSize().height - constants.BALL_SIZE) / 2
-    this.width = 10
-    this.height = 10
+    this.resetProps()
     this.background = 'red'
-    this.body = Matter.Bodies.circle(this.pos.x, this.pos.y, 10, {
-      label: 'Ball',
-      restitution: 0.8,
-      density: 0.0005,
-      friction: 0.8,
-      frictionAir: 0,
-    })
     this.renderer = <BallComponent />
 
   }
 
-  resetProps = (screen: ScreenSize): void => {
-    this.pos.x = (screen.width - constants.BALL_SIZE) / 2
-    this.pos.y = (screen.height - constants.BALL_SIZE) / 2
+  resetProps = (): void => {
+    this.pos.x = 200 + Math.abs(Math.random() * (SCENE_WIDTH - 200))
+    this.pos.y = 200 + Math.abs(Math.random() * (SCENE_HEIGHT - 200))
+    this.width = BALL_SIZE
+    this.height = BALL_SIZE
+    if (!this.body) {
+      this.body = Matter.Bodies.circle(this.pos.x, this.pos.y, 10, {
+        label: 'Ball',
+        restitution: 0.8,
+        density: 0.0005,
+        friction: 0.8,
+        frictionAir: 0,
+      })
+    }
     Matter.Body.setPosition(this.body, this.pos)
   }
 

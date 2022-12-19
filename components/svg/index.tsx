@@ -1,12 +1,26 @@
+import { TouchEvent } from 'react'
 import Svg, { Circle, Rect, G, Path } from 'react-native-svg'
 
-export default function ResetIcon() {
+export default function ResetIcon({ onTouch }: { onTouch: any }) {
   return (
-    <Svg width="21px" height="21px" viewBox="0 0 21 21">
+    <Svg
+      width="21px"
+      height="21px"
+      viewBox="0 0 21 21"
+      onTouchStart={onTouch}
+      style={{
+        position: 'absolute',
+        zIndex: 5,
+        top: 50,
+        right: 50,
+
+      }}
+    >
       <G
         fill="none"
         fillRule="evenodd"
-        stroke="currentColor"
+        stroke="yellow"
+        strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"
         transform="matrix(0 1 1 0 2.5 2.5)"

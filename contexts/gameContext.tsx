@@ -4,9 +4,11 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react'
 import { getEntities } from '../components/entities'
+import { ViewComponent } from 'react-native'
 import { Audio, AVPlaybackSource } from 'expo-av'
 
 type Entities = ReturnType<typeof getEntities>
@@ -19,12 +21,14 @@ const GameContext = createContext(
     showMenu: boolean
     setShowMenu: (v: boolean) => void
     playMusic: () => void
+    cameraPos: {x: number, y: number}
   }
 )
 
 export const useGame = () => useContext(GameContext)
 
 export default function GameContextWrapper(props: PropsWithChildren) {
+  const [cameraPos, setCameraPos] = useState({ x: 0, y: 0});
   const [entities, setEntities] = useState<ReturnType<typeof getEntities>>()
   const [showMenu, setShowMenu] = useState(true)
   const [phoneMusicPlayed, setPhoneMusicPlayed] = useState(false)
@@ -33,7 +37,7 @@ export default function GameContextWrapper(props: PropsWithChildren) {
     'https://firebasestorage.googleapis.com/v0/b/su-10-ee191.appspot.com/o/tracks%2Fbbv.mp3?alt=media&token=72fd4d38-76c5-4d8f-9a79-2ab31d67e1db'
 
   const initGame = useCallback(() => {
-    setEntities(getEntities())
+    setEntities(getEntities(setCameraPos))
   }, [entities])
 
   const playMusic = async () => {
@@ -72,6 +76,7 @@ export default function GameContextWrapper(props: PropsWithChildren) {
         showMenu,
         setShowMenu,
         playMusic,
+        cameraPos
       }}
     >
       {props.children}

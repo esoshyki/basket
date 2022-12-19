@@ -1,6 +1,7 @@
 import Matter from 'matter-js'
 import { getEntities } from '..'
 import { getScreenSize } from '../../../helpers/getScreenSize'
+import { SCENE_HEIGHT, SCENE_WIDTH, WALLS_WIDTH } from '../constants'
 
 export const ContolsPhysics = (
   entities: ReturnType<typeof getEntities>,
@@ -11,8 +12,14 @@ export const ContolsPhysics = (
 
   entities.Statistic.calculateStatistic()
 
-  if (entities.Ball.pos.x < 0 - 20 || entities.Ball.pos.x > getScreenSize().width + 20 || entities.Ball.pos.y < -20 || entities.Ball.pos.y > getScreenSize().height * 2 + 20) {
+  if (
+    entities.Ball.body.position.x < 0 - WALLS_WIDTH ||
+    entities.Ball.body.position.x > SCENE_WIDTH + WALLS_WIDTH ||
+    entities.Ball.body.position.y < 0 - WALLS_WIDTH ||
+    entities.Ball.body.position.y > SCENE_HEIGHT + WALLS_WIDTH
+  ) {
     entities.Ball.resetProps()
+    Matter.Body.setVelocity(entities.Ball.body, { x: 0, y: 0 })
   }
 
   touches
@@ -50,6 +57,8 @@ export const ContolsPhysics = (
       })
       entities.Controls.useForce(entities.Ball.body)
     })
+
+  entities.Scene.camera.followTheBall()
 
   return entities
 }
